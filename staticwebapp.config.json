@@ -1,0 +1,52 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/assets/*",
+      "/*.css",
+      "/*.js",
+      "/*.svg",
+      "/*.jpg",
+      "/*.jpeg",
+      "/*.png",
+      "/*.webp",
+      "/*.ico",
+      "/*.txt",
+      "/*.xml",
+      "/*.html"
+    ]
+  },
+  "routes": [
+    {
+      "route": "/book",
+      "rewrite": "/book.html"
+    },
+    {
+      "route": "/insights",
+      "rewrite": "/insights.html"
+    },
+    {
+      "route": "/impressum",
+      "rewrite": "/impressum.html"
+    },
+    {
+      "route": "/privacy",
+      "rewrite": "/privacy.html"
+    },
+    {
+      "route": "/datenschutz",
+      "rewrite": "/datenschutz.html"
+    }
+  ],
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".svg": "image/svg+xml",
+    ".woff2": "font/woff2"
+  }
+}
