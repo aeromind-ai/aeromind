@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroMind — The Operational Intelligence Layer for Electric Aviation</title>
+  <meta name="description" content="AeroMind makes electric aircraft legible from the first flight. Physics-informed operational intelligence for next-generation aviation.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0A1628;
+      --bg-elevated: #0F1E35;
+      --bg-elevated-2: #1E3050;
+      --cream: #F4F2EE;
+      --cream-dim: #D1CFC9;
+      --body-light: #B0BEDF;
+      --body-dim: #6B7B9F;
+      --accent-rose: #E89589;
+      --accent-blue: #5B9EFF;
+      --accent-emerald: #6EE7B7;
+      --accent-gold: #E5C988;
+      --accent-cyan: #94CFE8;
+      --line: rgba(176, 190, 223, 0.18);
+      --line-strong: rgba(176, 190, 223, 0.32);
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── Subtle horizon gradient background ────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1200px 600px at 80% -10%, rgba(91, 158, 255, 0.06), transparent 60%),
+        radial-gradient(ellipse 800px 400px at 20% 110%, rgba(232, 149, 137, 0.04), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Subtle grain overlay for tactile depth ────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────────── */
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── Top nav: minimal ──────────────────────────────────────────── */
+    nav {
+      padding: 36px 0 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      color: var(--cream);
+    }
+
+    .logo .accent {
+      color: var(--accent-blue);
+    }
+
+    .logo .italic {
+      font-style: italic;
+    }
+
+    .nav-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--body-dim);
+      text-transform: uppercase;
+    }
+
+    /* ── Hero section ──────────────────────────────────────────────── */
+    .hero {
+      padding: 120px 0 140px;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-rose);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease-out 0.1s forwards;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 7vw, 96px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      max-width: 1000px;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.25s forwards;
+    }
+
+    .hero-headline .italic-accent {
+      font-style: italic;
+      color: var(--accent-rose);
+      font-weight: 400;
+    }
+
+    .hero-subhead {
+      font-family: var(--font-body);
+      font-size: clamp(18px, 1.6vw, 22px);
+      font-weight: 300;
+      color: var(--body-light);
+      max-width: 720px;
+      line-height: 1.5;
+      margin-bottom: 64px;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.4s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      padding: 0 0 6px 0;
+      border: none;
+      border-bottom: 1px solid var(--accent-rose);
+      background: transparent;
+      cursor: pointer;
+      transition: gap 0.3s ease, color 0.3s ease;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.55s forwards;
+    }
+
+    .hero-cta:hover {
+      gap: 20px;
+      color: var(--accent-rose);
+    }
+
+    .hero-cta .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .hero-cta:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* ── Horizon line: structural motif ────────────────────────────── */
+    .horizon {
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--line) 8%,
+        var(--line-strong) 50%,
+        var(--line) 92%,
+        transparent 100%);
+      margin: 0;
+    }
+
+    .horizon-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+    }
+
+    .horizon-meta-left::before {
+      content: '◇';
+      margin-right: 12px;
+      color: var(--accent-blue);
+    }
+
+    /* ── Section structure ─────────────────────────────────────────── */
+    section {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-rose);
+      margin-bottom: 36px;
+      display: inline-block;
+    }
+
+    .section-headline {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5.5vw, 68px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 56px;
+      max-width: 900px;
+    }
+
+    .section-headline .italic-accent {
+      font-style: italic;
+      color: var(--accent-rose);
+    }
+
+    .section-body {
+      font-size: 19px;
+      color: var(--body-light);
+      max-width: 700px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .section-body strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    /* ── Problem section — two-column layout ──────────────────────── */
+    .problem-section {
+      padding: 120px 0;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 100px;
+      align-items: start;
+    }
+
+    .problem-context {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .problem-stat-row {
+      display: flex;
+      gap: 48px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+    }
+
+    .problem-stat {
+      flex: 1;
+    }
+
+    .problem-stat-value {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 400;
+      color: var(--accent-blue);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .problem-stat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      line-height: 1.5;
+    }
+
+    /* ── Platform section — sparse, deliberately ───────────────────── */
+    .platform-section {
+      background: var(--bg-elevated);
+      padding: 140px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    /* ── Paired problem layout ─────────────────────────────────────── */
+    .problem-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      margin-top: 56px;
+    }
+
+    .problem-half {
+      padding-top: 32px;
+      border-top: 2px solid;
+    }
+
+    .problem-half.corridor {
+      border-top-color: var(--accent-cyan);
+    }
+
+    .problem-half.operational {
+      border-top-color: var(--accent-rose);
+    }
+
+    .problem-half-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .problem-half.corridor .problem-half-label {
+      color: var(--accent-cyan);
+    }
+
+    .problem-half.operational .problem-half-label {
+      color: var(--accent-rose);
+    }
+
+    .problem-half-headline {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.2vw, 38px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.4px;
+      margin-bottom: 24px;
+      color: var(--cream);
+    }
+
+    .problem-half-headline .italic-accent {
+      font-style: italic;
+    }
+
+    .problem-half.corridor .problem-half-headline .italic-accent {
+      color: var(--accent-cyan);
+    }
+
+    .problem-half.operational .problem-half-headline .italic-accent {
+      color: var(--accent-rose);
+    }
+
+    .problem-half-body {
+      font-size: 16px;
+      color: var(--body-light);
+      line-height: 1.65;
+    }
+
+    .problem-half-body strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .problem-footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .problem-footer-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+    }
+
+    .problem-footer-text strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .problem-stat-pair {
+      display: flex;
+      gap: 40px;
+    }
+
+    .problem-stat-mini {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .problem-stat-mini-value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      color: var(--accent-blue);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .problem-stat-mini-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 820px) {
+      .problem-pair {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .problem-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* ── Two-pillar treatment in platform section ─────────────────── */
+    .pillar-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin: 36px 0 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+    }
+
+    .pillar {
+      padding-left: 16px;
+      border-left: 2px solid var(--line);
+    }
+
+    .pillar.operational {
+      border-left-color: var(--accent-emerald);
+    }
+
+    .pillar.corridor {
+      border-left-color: var(--accent-cyan);
+    }
+
+    .pillar-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      margin-bottom: 10px;
+    }
+
+    .pillar-name {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .pillar.operational .pillar-name {
+      color: var(--accent-emerald);
+    }
+
+    .pillar.corridor .pillar-name {
+      color: var(--accent-cyan);
+    }
+
+    .pillar-tagline {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--body-light);
+      line-height: 1.55;
+    }
+
+    @media (max-width: 720px) {
+      .pillar-pair {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    /* ── Carousel: What exists today ───────────────────────────────── */
+    .credentials-carousel {
+      position: relative;
+      padding: 36px 32px 32px;
+      border: 1px solid var(--line);
+      background: rgba(15, 30, 53, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .credentials-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-emerald);
+      margin-bottom: 4px;
+    }
+
+    .credentials-counter {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--body-dim);
+      margin-bottom: 32px;
+    }
+
+    .credentials-counter .current {
+      color: var(--cream);
+    }
+
+    /* Track holds all slides; only one is .active at a time */
+    .credentials-track {
+      flex: 1;
+      position: relative;
+      min-height: 200px;
+    }
+
+    .credential-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(12px);
+      visibility: hidden;
+      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0s linear 0.6s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .credential-slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0s linear 0s;
+    }
+
+    .credential-number {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--accent-emerald);
+      margin-bottom: 18px;
+    }
+
+    .credential-headline {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.25;
+      color: var(--cream);
+      margin-bottom: 18px;
+      letter-spacing: -0.2px;
+    }
+
+    .credential-context {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--body-light);
+      line-height: 1.6;
+    }
+
+    /* Controls: progress dots + arrows */
+    .credentials-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .credentials-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .credentials-dot {
+      width: 22px;
+      height: 2px;
+      background: var(--line-strong);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.3s ease, width 0.3s ease;
+    }
+
+    .credentials-dot:hover {
+      background: var(--body-light);
+    }
+
+    .credentials-dot.active {
+      background: var(--accent-emerald);
+      width: 32px;
+    }
+
+    .credentials-arrows {
+      display: flex;
+      gap: 8px;
+    }
+
+    .credentials-arrow {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      color: var(--body-light);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .credentials-arrow:hover {
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+
+    .credentials-arrow:focus-visible {
+      outline: 2px solid var(--accent-emerald);
+      outline-offset: 2px;
+    }
+
+    .credentials-dot:focus-visible {
+      outline: 2px solid var(--accent-emerald);
+      outline-offset: 4px;
+    }
+
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .credential-slide {
+        transition: opacity 0.01s, transform 0.01s, visibility 0.01s;
+      }
+    }
+
+    /* ── Stakeholders section ──────────────────────────────────────── */
+    .stakeholders-section {
+      padding: 140px 0;
+    }
+
+    .stakeholders-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 80px;
+    }
+
+    .stakeholder-card {
+      position: relative;
+      flex: 1 1 calc(20% - 16px);
+      min-width: 200px;
+      max-width: 240px;
+      padding: 36px 22px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      transition: transform 0.4s ease, border-color 0.4s ease;
+    }
+
+    .stakeholder-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--line-strong);
+    }
+
+    .stakeholder-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .stakeholder-card.rose::before { background: var(--accent-rose); }
+    .stakeholder-card.gold::before { background: var(--accent-gold); }
+    .stakeholder-card.blue::before { background: var(--accent-blue); }
+    .stakeholder-card.emerald::before { background: var(--accent-emerald); }
+    .stakeholder-card.cyan::before { background: var(--accent-cyan); }
+
+    .stakeholder-name {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1;
+      margin-bottom: 28px;
+    }
+
+    .stakeholder-card.rose .stakeholder-name { color: var(--accent-rose); }
+    .stakeholder-card.gold .stakeholder-name { color: var(--accent-gold); }
+    .stakeholder-card.blue .stakeholder-name { color: var(--accent-blue); }
+    .stakeholder-card.emerald .stakeholder-name { color: var(--accent-emerald); }
+    .stakeholder-card.cyan .stakeholder-name { color: var(--accent-cyan); }
+
+    .stakeholder-outcome {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cream);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .stakeholder-outcome-line {
+      display: block;
+    }
+
+    .stakeholder-outcome-line + .stakeholder-outcome-line {
+      margin-top: 6px;
+      color: var(--cream-dim);
+    }
+
+    .stakeholder-rule {
+      width: 32px;
+      height: 1px;
+      margin-bottom: 22px;
+    }
+
+    .stakeholder-card.rose .stakeholder-rule { background: var(--accent-rose); }
+    .stakeholder-card.gold .stakeholder-rule { background: var(--accent-gold); }
+    .stakeholder-card.blue .stakeholder-rule { background: var(--accent-blue); }
+    .stakeholder-card.emerald .stakeholder-rule { background: var(--accent-emerald); }
+    .stakeholder-card.cyan .stakeholder-rule { background: var(--accent-cyan); }
+
+    .stakeholder-body {
+      font-size: 14px;
+      color: var(--body-light);
+      line-height: 1.6;
+    }
+
+    /* ── Contact section ───────────────────────────────────────────── */
+    .contact-section {
+      background: var(--bg-elevated-2);
+      padding: 140px 0 120px;
+      border-top: 1px solid var(--line);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5vw, 60px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 40px;
+    }
+
+    .contact-headline .italic-accent {
+      font-style: italic;
+      color: var(--accent-rose);
+    }
+
+    .contact-body {
+      font-size: 17px;
+      color: var(--body-light);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+
+    .contact-info {
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+    }
+
+    .contact-info-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      margin-bottom: 8px;
+    }
+
+    .contact-info-value {
+      font-family: var(--font-body);
+      font-size: 17px;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+
+    .contact-info-value a {
+      color: var(--accent-rose);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .contact-info-value a:hover {
+      border-bottom-color: var(--accent-rose);
+    }
+
+    /* ── Form ──────────────────────────────────────────────────────── */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      margin-bottom: 10px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--line-strong);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 16px;
+      padding: 10px 0;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: var(--font-body);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-bottom-color: var(--accent-rose);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23B0BEDF' stroke-width='1.5' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      padding-right: 30px;
+    }
+
+    .form-select option {
+      background: var(--bg-elevated);
+      color: var(--cream);
+    }
+
+    .form-submit {
+      align-self: flex-start;
+      margin-top: 16px;
+      background: transparent;
+      border: 1px solid var(--accent-rose);
+      color: var(--accent-rose);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .form-submit:hover {
+      background: var(--accent-rose);
+      color: var(--bg);
+    }
+
+    .form-success {
+      display: none;
+      padding: 24px;
+      background: rgba(110, 231, 183, 0.08);
+      border-left: 2px solid var(--accent-emerald);
+      color: var(--cream);
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    .form-success.visible {
+      display: block;
+    }
+
+    /* ── Footer ────────────────────────────────────────────────────── */
+    footer {
+      padding: 60px 0 48px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+    }
+
+    .footer-meta span {
+      color: var(--cream-dim);
+    }
+
+    /* ── Closing CTA section (replaces old contact section in page flow) ── */
+    .closing-section {
+      padding: 140px 0 120px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+    }
+
+    .closing-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-rose);
+      margin-bottom: 32px;
+    }
+
+    .closing-headline {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4.5vw, 56px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      max-width: 800px;
+      margin: 0 auto 48px;
+    }
+
+    .closing-headline .italic-accent {
+      font-style: italic;
+      color: var(--accent-rose);
+    }
+
+    .closing-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: transparent;
+      border: 1px solid var(--accent-rose);
+      color: var(--accent-rose);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 22px 44px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease, gap 0.3s ease;
+    }
+
+    .closing-cta:hover {
+      background: var(--accent-rose);
+      color: var(--bg);
+      gap: 22px;
+    }
+
+    .closing-cta .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .closing-cta:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    .closing-sub {
+      margin-top: 32px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+    }
+
+    .closing-sub a {
+      color: var(--body-light);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .closing-sub a:hover {
+      color: var(--accent-rose);
+      border-bottom-color: var(--accent-rose);
+    }
+
+    /* ── Modal overlay ─────────────────────────────────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 20, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.35s ease, visibility 0s linear 0s;
+    }
+
+    .modal {
+      position: relative;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line-strong);
+      max-width: 720px;
+      width: 100%;
+      padding: 56px 56px 48px;
+      transform: translateY(20px) scale(0.98);
+      opacity: 0;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      color: var(--body-light);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s ease, color 0.3s ease;
+      padding: 0;
+    }
+
+    .modal-close:hover {
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+    }
+
+    .modal-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent-rose);
+      margin-bottom: 24px;
+    }
+
+    .modal-headline {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+      max-width: 540px;
+    }
+
+    .modal-headline .italic-accent {
+      font-style: italic;
+      color: var(--accent-rose);
+    }
+
+    .modal-body {
+      font-size: 16px;
+      color: var(--body-light);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 540px;
+    }
+
+    .modal-body strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    /* ── Booking area inside modal ──────────────────────────────────── */
+    .booking-area {
+      padding: 32px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+
+    .booking-area-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-emerald);
+      margin-bottom: 16px;
+    }
+
+    .booking-area-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--cream);
+      margin-bottom: 12px;
+    }
+
+    .booking-area-text {
+      font-size: 14px;
+      color: var(--body-light);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .booking-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--accent-rose);
+      border: 1px solid var(--accent-rose);
+      color: var(--bg);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 18px 36px;
+      text-decoration: none;
+      transition: background 0.3s ease, color 0.3s ease, gap 0.3s ease;
+      cursor: pointer;
+    }
+
+    .booking-button:hover {
+      background: transparent;
+      color: var(--accent-rose);
+      gap: 18px;
+    }
+
+    .booking-button .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .booking-button:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* ── Fallback divider + email link ─────────────────────────────── */
+    .modal-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 28px 0 24px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+    }
+
+    .modal-divider::before,
+    .modal-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .modal-email {
+      display: block;
+      text-align: center;
+    }
+
+    .modal-email-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      margin-bottom: 8px;
+    }
+
+    .modal-email-link {
+      font-family: var(--font-body);
+      font-size: 18px;
+      color: var(--cream);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-rose);
+      padding-bottom: 4px;
+      transition: color 0.3s ease;
+    }
+
+    .modal-email-link:hover {
+      color: var(--accent-rose);
+    }
+
+    .modal-footer-note {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--body-dim);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* Prevent body scroll when modal is open */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* ── Modal responsive ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .modal {
+        padding: 56px 28px 32px;
+      }
+
+      .booking-area {
+        padding: 24px 20px;
+      }
+    }
+
+    /* ── Animations ────────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .problem-grid,
+      .platform-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 56px;
+      }
+
+      .hero {
+        padding: 80px 0 100px;
+      }
+
+      section {
+        padding: 80px 0;
+      }
+
+      .problem-stat-row {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 20px;
+      }
+
+      .nav-meta {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <span class="italic">Aero</span><span class="accent">Mind</span>
+      </div>
+      <div class="nav-meta">
+        Frankfurt &nbsp;·&nbsp; 2026
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ────────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">The investment thesis</div>
+      <h1 class="hero-headline">
+        AeroMind makes electric aircraft <span class="italic-accent">legible</span> from the first flight.
+      </h1>
+      <p class="hero-subhead">
+        Physics-feasible corridor economics. Per-aircraft operational intelligence. A single platform for the next generation of aviation. Built in Frankfurt. Patents pending.
+      </p>
+      <button type="button" class="hero-cta" data-open-modal>
+        Get in touch <span class="arrow">→</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── HORIZON META BAND ───────────────────────────────────────── -->
+  <div class="container">
+    <div class="horizon"></div>
+    <div class="horizon-meta">
+      <span class="horizon-meta-left">Stealth · Pre-seed · Confidential</span>
+      <span>For investors, customers, advisors, partners</span>
+    </div>
+    <div class="horizon"></div>
+  </div>
+
+  <!-- ── PROBLEM ─────────────────────────────────────────────────── -->
+  <section class="problem-section">
+    <div class="container">
+      <div class="scroll-reveal">
+        <div class="section-eyebrow">The two unsolved problems</div>
+        <h2 class="section-headline">
+          The next generation of aviation breaks <span class="italic-accent">two systems at once.</span>
+        </h2>
+        <p class="section-body" style="max-width: 760px; margin-bottom: 0;">
+          The aircraft are real. The order book is real. The intelligence layer that the rest of aviation depends on &mdash; for route planning, for insurance, for financing, for dispatch &mdash; was built for fleets with accumulated operating evidence. AAM has none yet. Two structural gaps follow.
+        </p>
+
+        <div class="problem-pair">
+          <div class="problem-half corridor">
+            <div class="problem-half-label">Problem one &nbsp;·&nbsp; Network</div>
+            <h3 class="problem-half-headline">
+              Corridors are <span class="italic-accent">unplannable</span> without physics.
+            </h3>
+            <p class="problem-half-body">
+              Operators, lessors, OEMs, and city planners cannot evaluate which routes a new aircraft can profitably serve. Conventional route-planning assumes <strong>fleet-average performance</strong> and <strong>accumulated route data</strong> &mdash; neither exists for AAM. Network decisions get made on spreadsheets and OEM marketing material.
+            </p>
+          </div>
+
+          <div class="problem-half operational">
+            <div class="problem-half-label">Problem two &nbsp;·&nbsp; Per aircraft</div>
+            <h3 class="problem-half-headline">
+              Aircraft are <span class="italic-accent">opaque</span> without failure data.
+            </h3>
+            <p class="problem-half-body">
+              Insurers, lessors, and operators cannot make calibrated decisions about individual aircraft. Conventional aviation intelligence requires <strong>accumulated failure data</strong> to calibrate. None exists for AAM. Per-aircraft decisions &mdash; underwrite, finance, dispatch &mdash; structurally break.
+            </p>
+          </div>
+        </div>
+
+        <div class="problem-footer">
+          <div class="problem-footer-text">
+            Both gaps. <strong>One platform.</strong>
+          </div>
+          <div class="problem-stat-pair">
+            <div class="problem-stat-mini">
+              <div class="problem-stat-mini-value">$137B</div>
+              <div class="problem-stat-mini-label">Order book backing aircraft<br>with no operating history</div>
+            </div>
+            <div class="problem-stat-mini">
+              <div class="problem-stat-mini-value">18mo</div>
+              <div class="problem-stat-mini-label">To first commercial<br>passenger service</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PLATFORM ────────────────────────────────────────────────── -->
+  <section class="platform-section">
+    <div class="container">
+      <div class="platform-grid scroll-reveal">
+        <div>
+          <div class="section-eyebrow" style="color: var(--accent-emerald);">What we build</div>
+          <h2 class="section-headline">
+            Physics-grounded intelligence. <span class="italic-accent" style="color: var(--accent-emerald);">Two pillars, one platform.</span>
+          </h2>
+          <p class="section-body">
+            AeroMind sits where conventional data-driven methods have no signal to work with. The platform serves <strong>corridor-level commercial decisions</strong> (route economics, network planning, infrastructure siting) and <strong>per-aircraft operational decisions</strong> (insurance, financing, dispatch) from a single physics-grounded core.
+          </p>
+
+          <div class="pillar-pair">
+            <div class="pillar corridor">
+              <div class="pillar-label">Network layer</div>
+              <div class="pillar-name">Corridor intelligence</div>
+              <p class="pillar-tagline">
+                Physics-feasible route economics for operators, OEMs, lessors, and city planners. Calibrated corridor-level decisions at the planning horizon.
+              </p>
+            </div>
+            <div class="pillar operational">
+              <div class="pillar-label">Per-aircraft layer</div>
+              <div class="pillar-name">Operational intelligence</div>
+              <p class="pillar-tagline">
+                Per-aircraft state-of-health for insurers, lessors, and operators. Calibrated per-tail decisions from the first flight.
+              </p>
+            </div>
+          </div>
+
+          <p class="section-body" style="color: var(--body-dim); font-size: 16px; margin-top: 32px;">
+            Specific technical architecture, methodology, and platform capabilities are shared under NDA with qualified investors, customers, and partners.
+          </p>
+        </div>
+        <div class="credentials-carousel" id="credentialsCarousel"
+             role="region" aria-label="What exists today"
+             aria-roledescription="carousel">
+          <div class="credentials-eyebrow">What exists today</div>
+          <div class="credentials-counter">
+            <span class="current" id="credCurrent">01</span> &nbsp;/&nbsp; <span id="credTotal">05</span>
+          </div>
+
+          <div class="credentials-track" aria-live="polite">
+            <div class="credential-slide active" role="group" aria-roledescription="slide" aria-label="1 of 5">
+              <div class="credential-number">01</div>
+              <div class="credential-headline">Corridor intelligence engine, live today.</div>
+              <p class="credential-context">
+                Demonstrable corridor-economics product, on the public web. Multi-market coverage. Reviewable under NDA.
+              </p>
+            </div>
+
+            <div class="credential-slide" role="group" aria-roledescription="slide" aria-label="2 of 5">
+              <div class="credential-number">02</div>
+              <div class="credential-headline">Operational platform, production codebase.</div>
+              <p class="credential-context">
+                The per-aircraft pillar. Active development with a working production system. Coordinated module architecture, not slideware.
+              </p>
+            </div>
+
+            <div class="credential-slide" role="group" aria-roledescription="slide" aria-label="3 of 5">
+              <div class="credential-number">03</div>
+              <div class="credential-headline">Three coordinated patent applications.</div>
+              <p class="credential-context">
+                A defensible IP position covering the operational core, the data-exchange layer, and the corridor-intelligence engine.
+              </p>
+            </div>
+
+            <div class="credential-slide" role="group" aria-roledescription="slide" aria-label="4 of 5">
+              <div class="credential-number">04</div>
+              <div class="credential-headline">Domain coverage across the full electric powertrain.</div>
+              <p class="credential-context">
+                Multiple physics domains, calibrated against aerospace-grade reference behaviour. Built for the specific failure modes of electric aviation.
+              </p>
+            </div>
+
+            <div class="credential-slide" role="group" aria-roledescription="slide" aria-label="5 of 5">
+              <div class="credential-number">05</div>
+              <div class="credential-headline">Decades of aviation systems and AI expertise.</div>
+              <p class="credential-context">
+                Boeing, Jeppesen, enterprise data platforms. Operational background in the systems AeroMind is built to complement and extend. European headquarters, European regulatory engagement.
+              </p>
+            </div>
+          </div>
+
+          <div class="credentials-controls">
+            <div class="credentials-dots" role="tablist" aria-label="Choose credential">
+              <button class="credentials-dot active" data-slide="0" aria-label="Credential 1" aria-selected="true"></button>
+              <button class="credentials-dot" data-slide="1" aria-label="Credential 2" aria-selected="false"></button>
+              <button class="credentials-dot" data-slide="2" aria-label="Credential 3" aria-selected="false"></button>
+              <button class="credentials-dot" data-slide="3" aria-label="Credential 4" aria-selected="false"></button>
+              <button class="credentials-dot" data-slide="4" aria-label="Credential 5" aria-selected="false"></button>
+            </div>
+            <div class="credentials-arrows">
+              <button class="credentials-arrow" id="credPrev" aria-label="Previous credential">←</button>
+              <button class="credentials-arrow" id="credNext" aria-label="Next credential">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STAKEHOLDERS ────────────────────────────────────────────── -->
+  <section class="stakeholders-section">
+    <div class="container">
+      <div class="scroll-reveal">
+        <div class="section-eyebrow">Who it's for</div>
+        <h2 class="section-headline">
+          Built for the decisions <span class="italic-accent">aviation makes about every aircraft &mdash; and every corridor.</span>
+        </h2>
+      </div>
+
+      <div class="stakeholders-grid scroll-reveal">
+        <div class="stakeholder-card rose">
+          <div class="stakeholder-name">Insurers</div>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Underwrite the unprecedented.</span>
+            <span class="stakeholder-outcome-line">Price risk with evidence.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Price hull and liability on aircraft with no actuarial precedent, with calibrated confidence intervals from flight one.
+          </p>
+        </div>
+
+        <div class="stakeholder-card gold">
+          <div class="stakeholder-name">Lessors</div>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Finance with conviction.</span>
+            <span class="stakeholder-outcome-line">Underwrite the asset.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Underwrite multi-million-dollar aircraft over decade-long leases with independent visibility into operational condition.
+          </p>
+        </div>
+
+        <div class="stakeholder-card blue">
+          <div class="stakeholder-name">Operators</div>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Research routes that pay.</span>
+            <span class="stakeholder-outcome-line">Dispatch with confidence.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Identify the corridors your fleet can profitably serve before committing capital. Make go/no-go dispatch decisions backed by per-aircraft prediction &mdash; not fleet-average heuristics or experienced intuition.
+          </p>
+        </div>
+
+        <div class="stakeholder-card emerald">
+          <div class="stakeholder-name">OEMs</div>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Sell into financed markets.</span>
+            <span class="stakeholder-outcome-line">Close the design feedback loop.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Close fleet orders with credible operational intelligence the buyer's lessors and underwriters can independently trust. Receive structured field data that informs the next iteration of aircraft design.
+          </p>
+        </div>
+
+        <div class="stakeholder-card cyan">
+          <div class="stakeholder-name">City Planners</div>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Site vertiports on real demand.</span>
+            <span class="stakeholder-outcome-line">Underwrite infrastructure.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Evaluate which corridors justify multi-million-dollar vertiport investment based on physics-feasible demand &mdash; not OEM marketing material or demographic guesses. Calibrated infrastructure planning for the AAM era.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CLOSING CTA ─────────────────────────────────────────────── -->
+  <section class="closing-section scroll-reveal">
+    <div class="container">
+      <div class="closing-eyebrow">Get in touch</div>
+      <h2 class="closing-headline">
+        Confidential <span class="italic-accent">discovery conversations</span> for serious enquiries.
+      </h2>
+      <button class="closing-cta" data-open-modal>
+        Book a discovery call <span class="arrow">→</span>
+      </button>
+      <div class="closing-sub">
+        or email <a href="mailto:contact@aeromind-ai.com">contact@aeromind-ai.com</a> directly
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-meta">
+          <span>AeroMind AI</span> &nbsp;·&nbsp; © 2026 &nbsp;·&nbsp; Frankfurt
+        </div>
+        <div class="footer-meta">
+          The operational intelligence layer &nbsp;·&nbsp; for electric aviation
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── MODAL: Discovery call booking ─────────────────────────────── -->
+  <div class="modal-backdrop" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalHeadline" aria-hidden="true">
+    <div class="modal">
+      <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+
+      <div class="modal-eyebrow">Get in touch</div>
+      <h2 class="modal-headline" id="modalHeadline">
+        Let's <span class="italic-accent">talk.</span>
+      </h2>
+      <p class="modal-body">
+        AeroMind is in active conversation with investors, prospective customers, advisors, and senior technical hires. Specifics of the platform, business model, and roadmap are shared under NDA following an initial conversation.
+      </p>
+
+      <!--
+        BOOKING INTEGRATION
+        Microsoft Bookings hosted at aeromind-ai.com (Microsoft 365 tenant).
+        Booking type: AeroMind Discovery Call.
+        Link opens in a new tab; visitor selects a time from your live availability.
+        Replace the href below if the booking page is ever migrated.
+      -->
+
+      <div class="booking-area">
+        <div class="booking-area-label">Discovery call · 30 minutes · Video</div>
+        <div class="booking-area-title">Pick a time that works for you.</div>
+        <p class="booking-area-text">
+          A short conversation to understand your context &mdash; what you're working on, what you're solving for, where AeroMind might fit. No deck walk-through, no pitch. Just a real conversation.
+        </p>
+        <a href="https://outlook.office.com/bookwithme/user/eccd48929bdc44f3a8463986e3dfbc59@aeromind-ai.com/meetingtype/XsPbiYF26kW9Qj9VCvxPLQ2?anonymous&ismsaljsauthenabled&ep=mcard"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="booking-button">
+          Book a time <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="modal-divider">or</div>
+
+      <div class="modal-email">
+        <div class="modal-email-label">Email directly</div>
+        <a href="mailto:contact@aeromind-ai.com?subject=AeroMind%20%E2%80%94%20enquiry"
+           class="modal-email-link">
+          contact@aeromind-ai.com
+        </a>
+      </div>
+
+      <div class="modal-footer-note">
+        AeroMind AI &nbsp;·&nbsp; Frankfurt, Germany
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Minimal JavaScript: scroll reveals + modal control ────── -->
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+    // ── Modal control ─────────────────────────────────────────────
+    const modal = document.getElementById('contactModal');
+    let lastFocusedElement = null;
+
+    function openModal() {
+      lastFocusedElement = document.activeElement;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      // Focus the close button so keyboard users can ESC out immediately
+      requestAnimationFrame(() => {
+        modal.querySelector('.modal-close').focus();
+      });
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      // Restore focus to whatever opened the modal
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+      }
+    }
+
+    // Wire all open-modal triggers
+    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    // Wire all close-modal triggers
+    document.querySelectorAll('[data-close-modal]').forEach(btn => {
+      btn.addEventListener('click', closeModal);
+    });
+
+    // Click on backdrop (but not on modal itself) closes
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // ESC key closes
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) {
+        closeModal();
+      }
+    });
+
+    // Focus trap inside modal (basic — keeps tab cycle within modal)
+    modal.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !modal.classList.contains('open')) return;
+      const focusable = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    // ── Credentials carousel ──────────────────────────────────────
+    (function initCarousel() {
+      const carousel = document.getElementById('credentialsCarousel');
+      if (!carousel) return;
+
+      const slides = carousel.querySelectorAll('.credential-slide');
+      const dots = carousel.querySelectorAll('.credentials-dot');
+      const prevBtn = document.getElementById('credPrev');
+      const nextBtn = document.getElementById('credNext');
+      const currentEl = document.getElementById('credCurrent');
+
+      let activeIndex = 0;
+      let autoTimer = null;
+      const AUTO_INTERVAL = 6000; // 6 seconds per slide
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function show(index) {
+        index = ((index % slides.length) + slides.length) % slides.length;
+        slides.forEach((s, i) => s.classList.toggle('active', i === index));
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === index);
+          d.setAttribute('aria-selected', i === index ? 'true' : 'false');
+        });
+        currentEl.textContent = String(index + 1).padStart(2, '0');
+        activeIndex = index;
+      }
+
+      function next() { show(activeIndex + 1); }
+      function prev() { show(activeIndex - 1); }
+
+      function startAuto() {
+        if (prefersReducedMotion) return;
+        stopAuto();
+        autoTimer = setInterval(next, AUTO_INTERVAL);
+      }
+
+      function stopAuto() {
+        if (autoTimer) {
+          clearInterval(autoTimer);
+          autoTimer = null;
+        }
+      }
+
+      function restartAuto() {
+        stopAuto();
+        startAuto();
+      }
+
+      // Wire dots
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          show(i);
+          restartAuto();
+        });
+      });
+
+      // Wire arrows
+      nextBtn.addEventListener('click', () => { next(); restartAuto(); });
+      prevBtn.addEventListener('click', () => { prev(); restartAuto(); });
+
+      // Pause on hover (desktop) and focus (keyboard)
+      carousel.addEventListener('mouseenter', stopAuto);
+      carousel.addEventListener('mouseleave', startAuto);
+      carousel.addEventListener('focusin', stopAuto);
+      carousel.addEventListener('focusout', (e) => {
+        // Only restart if focus has truly left the carousel
+        if (!carousel.contains(e.relatedTarget)) startAuto();
+      });
+
+      // Keyboard arrow keys (only when carousel has focus)
+      carousel.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); next(); restartAuto(); }
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); restartAuto(); }
+      });
+
+      // Pause auto-advance when the carousel is offscreen
+      const visibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) startAuto();
+          else stopAuto();
+        });
+      }, { threshold: 0.25 });
+      visibilityObserver.observe(carousel);
+
+      // Also pause when the browser tab is hidden
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stopAuto();
+        else if (isInViewport(carousel)) startAuto();
+      });
+
+      function isInViewport(el) {
+        const r = el.getBoundingClientRect();
+        return r.bottom > 0 && r.top < window.innerHeight;
+      }
+    })();
+  </script>
+
+</body>
+</html>

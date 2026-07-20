@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AeroMind">
+  <rect width="64" height="64" rx="12" fill="#0A1628"/>
+  <path d="M12 40c8-14 18-22 32-26" fill="none" stroke="#5B9EFF" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+  <path d="M18 44c10-12 20-18 28-20" fill="none" stroke="#94CFE8" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+  <circle cx="46" cy="14" r="3.2" fill="#6EE7B7"/>
+  <path d="M22 36h20l6 4H28l-6-4z" fill="#E89589" opacity="0.95"/>
+  <path d="M28 36l4-8 4 8" fill="none" stroke="#F4F2EE" stroke-width="1.4" stroke-linejoin="round"/>
+</svg>

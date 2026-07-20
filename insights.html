@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insights — AeroMind</title>
+  <meta name="description" content="Notes on physics-grounded operational intelligence for electric aviation and advanced air mobility.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://aeromind-ai.com/insights.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Insights — AeroMind">
+  <meta property="og:description" content="Notes on physics-grounded operational intelligence for electric aviation.">
+  <meta property="og:url" content="https://aeromind-ai.com/insights.html">
+  <meta property="og:image" content="https://aeromind-ai.com/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A1628; --bg-elevated: #0F1E35; --cream: #F4F2EE; --body-light: #B0BEDF;
+      --body-dim: #8A9BB8; --accent-blue: #5B9EFF; --accent-rose: #E89589; --accent-emerald: #6EE7B7;
+      --line: rgba(176,190,223,0.18); --line-strong: rgba(176,190,223,0.32);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--cream); font-family: var(--font-body); font-weight: 300; line-height: 1.65; }
+    a { color: var(--accent-rose); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 3px; }
+    .nav { border-bottom: 1px solid var(--line); padding: 22px 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; background: rgba(10,22,40,0.92); backdrop-filter: blur(12px); z-index: 10; }
+    .logo { font-family: var(--font-display); font-size: 26px; color: var(--cream); text-decoration: none; }
+    .logo .accent { color: var(--accent-blue); }
+    .logo .italic { font-style: italic; }
+    .nav-links { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+    .nav-links a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--body-light); text-decoration: none; }
+    .nav-links a:hover { color: var(--cream); text-decoration: none; }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 72px 32px 100px; }
+    .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-rose); margin-bottom: 20px; }
+    h1 { font-family: var(--font-display); font-size: clamp(40px, 6vw, 64px); font-weight: 400; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.5px; }
+    .intro { font-size: 18px; color: var(--body-light); max-width: 640px; margin-bottom: 56px; }
+    article { border-top: 1px solid var(--line); padding: 40px 0; }
+    article h2 { font-family: var(--font-display); font-size: 28px; font-weight: 400; margin-bottom: 12px; letter-spacing: -0.3px; }
+    article h2 a { color: var(--cream); text-decoration: none; }
+    article h2 a:hover { color: var(--accent-blue); text-decoration: none; }
+    .meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--body-dim); margin-bottom: 16px; }
+    article p { color: var(--body-light); font-size: 16px; margin-bottom: 14px; }
+    .tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-emerald); border: 1px solid rgba(110,231,183,0.35); padding: 4px 10px; margin-bottom: 16px; }
+    .cta-band { margin-top: 48px; padding: 36px; border: 1px solid var(--line); background: var(--bg-elevated); }
+    .cta-band h3 { font-family: var(--font-display); font-size: 26px; font-weight: 400; margin-bottom: 10px; }
+    .cta-band p { color: var(--body-light); margin-bottom: 20px; }
+    .btn { display: inline-flex; font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; background: var(--accent-rose); color: var(--bg); padding: 14px 28px; text-decoration: none; }
+    .btn:hover { text-decoration: none; opacity: 0.92; }
+    .footer { border-top: 1px solid var(--line); padding: 28px 32px; color: var(--body-dim); font-size: 13px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer a { color: var(--body-light); }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Main navigation">
+    <a class="logo" href="index.html"><span class="italic">Aero</span><span class="accent">Mind</span></a>
+    <div class="nav-links">
+      <a href="index.html#platform">Platform</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="book.html">Book a demo</a>
+    </div>
+  </nav>
+  <main class="wrap">
+    <p class="eyebrow">Insights</p>
+    <h1>Notes from the edge of electric aviation operations.</h1>
+    <p class="intro">
+      Short perspectives on why physics-first intelligence matters when route history
+      and failure statistics do not yet exist — for operators, underwriters, and the
+      wider advanced air mobility ecosystem.
+    </p>
+
+    <article id="physics-before-fleet-history">
+      <span class="tag">Thesis</span>
+      <p class="meta">Operational intelligence</p>
+      <h2><a href="#physics-before-fleet-history">Physics before fleet history</a></h2>
+      <p>
+        Conventional aviation analytics assumes decades of accumulated operating evidence.
+        Electric aircraft enter service without that corpus. Route planning, insurance,
+        financing, and dispatch still need decision-grade numbers on day one.
+      </p>
+      <p>
+        AeroMind starts from multi-domain models of the aircraft and environment —
+        electrochemistry, thermal behaviour, aerodynamics — and treats telemetry as
+        continuous calibration, not a prerequisite. That inversion is what makes
+        corridor economics and per-aircraft state-of-health usable before actuarial
+        precedent exists.
+      </p>
+    </article>
+
+    <article id="underwriting-without-actuarial-precedent">
+      <span class="tag">Insurers &amp; lessors</span>
+      <p class="meta">Risk &amp; capital</p>
+      <h2><a href="#underwriting-without-actuarial-precedent">Underwriting without actuarial precedent</a></h2>
+      <p>
+        Hull and liability pricing for novel electric platforms cannot lean solely on
+        historical loss tables. What underwriters and lessors need is calibrated
+        condition evidence per airframe — with quantified uncertainty — from first flight
+        through the lease life.
+      </p>
+      <p>
+        Independent operational intelligence closes the gap between OEM performance
+        claims and the capital providers who must live with residual risk for a decade.
+      </p>
+    </article>
+
+    <article id="corridors-that-do-not-exist-yet">
+      <span class="tag">Operators &amp; cities</span>
+      <p class="meta">Network planning</p>
+      <h2><a href="#corridors-that-do-not-exist-yet">Corridors that do not exist yet</a></h2>
+      <p>
+        Network design for advanced air mobility is not a simple transfer of airline
+        city-pair heuristics. Physics-feasible range, energy, utilisation, and
+        infrastructure constraints define which corridors can actually pay.
+      </p>
+      <p>
+        Evaluating candidate networks before revenue service — under transparent
+        aircraft and energy assumptions — is how operators and city planners avoid
+        building for demand that the vehicle cannot serve.
+      </p>
+    </article>
+
+    <div class="cta-band">
+      <h3>See it on your routes.</h3>
+      <p>A 30-minute discovery call — no deck walk-through. Just whether AeroMind fits the decisions you make.</p>
+      <a class="btn" href="book.html">Book a time →</a>
+    </div>
+  </main>
+  <footer class="footer">
+    <span>AeroMind AI · Frankfurt</span>
+    <span>
+      <a href="impressum.html">Impressum</a> ·
+      <a href="privacy.html">Privacy</a> ·
+      <a href="index.html">Home</a>
+    </span>
+  </footer>
+</body>
+</html>
