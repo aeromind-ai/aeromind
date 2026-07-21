@@ -803,22 +803,26 @@
       max-width: 540px;
       margin: 0 auto;
       width: 100%;
+      /* Explicit square box so the WebGL canvas never stretches */
+      height: auto;
     }
 
     #globe-canvas {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
       opacity: 0;
       transition: opacity 1.4s ease;
+      pointer-events: none;
     }
 
     #globe-canvas.ready { opacity: 1; }
 
     .globe-caption {
       position: absolute;
-      bottom: -8px;
+      bottom: -28px;
       left: 0;
       right: 0;
       text-align: center;
@@ -2181,11 +2185,32 @@
       return renderer;
     }
 
+    // Match WebGL buffer to the canvas CSS box only — never force window size
+    // (that stretched the globe into an oval when CSS was square).
     function canvasSize(canvas) {
       const parent = canvas.parentElement;
-      const w = Math.max(canvas.clientWidth || 0, parent ? parent.clientWidth : 0, window.innerWidth || 0);
-      const h = Math.max(canvas.clientHeight || 0, parent ? parent.clientHeight : 0, window.innerHeight || 0);
-      return { w: Math.max(1, w), h: Math.max(1, h) };
+      let w = canvas.clientWidth || 0;
+      let h = canvas.clientHeight || 0;
+
+      if (parent && (w < 2 || h < 2)) {
+        const rect = parent.getBoundingClientRect();
+        w = rect.width || parent.clientWidth || w;
+        h = rect.height || parent.clientHeight || h;
+      }
+
+      // Absolute-fill canvases: prefer parent box for stable layout size
+      if (parent && canvas.style) {
+        const rect = parent.getBoundingClientRect();
+        if (rect.width > 2 && rect.height > 2) {
+          w = rect.width;
+          h = rect.height;
+        }
+      }
+
+      return {
+        w: Math.max(1, Math.round(w || 1)),
+        h: Math.max(1, Math.round(h || 1))
+      };
     }
 
     function edgeLines(geometry, color, opacity) {
@@ -2455,13 +2480,21 @@
       });
 
       function resize() {
-        const { w, h } = canvasSize(canvas);
+        let { w, h } = canvasSize(canvas);
+        // Force a square drawing buffer so the sphere stays circular
+        const side = Math.max(1, Math.round(Math.min(w, h) || Math.max(w, h)));
+        w = side;
+        h = side;
         renderer.setSize(w, h, false);
-        camera.aspect = w / h;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        camera.aspect = 1;
         camera.updateProjectionMatrix();
       }
       resize();
       window.addEventListener('resize', resize);
+      // Re-measure after layout (sticky/aspect-ratio can settle a frame late)
+      requestAnimationFrame(resize);
 
       function render(t) {
         const time = (typeof t === 'number' ? t : 0) * 0.001;
