@@ -657,10 +657,16 @@
       border: 1px solid var(--line);
       background: var(--bg);
       overflow: hidden;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, transform 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
     }
 
-    .product-frame:hover { border-color: var(--line-strong); }
+    .product-frame:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
 
     .product-frame-bar {
       display: flex;
@@ -688,150 +694,42 @@
       color: var(--body-dim);
     }
 
-    .product-frame-body {
-      padding: 20px;
-      min-height: 280px;
-    }
-
-    .mock-map {
+    .product-shot {
       position: relative;
-      height: 200px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 30% 40%, rgba(91,158,255,0.12), transparent 40%),
-        radial-gradient(circle at 70% 55%, rgba(110,231,183,0.1), transparent 35%),
-        linear-gradient(180deg, #0c1a30 0%, #0A1628 100%);
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .mock-arc {
-      position: absolute;
-      border: 1px dashed;
-      border-radius: 50%;
-      opacity: 0.55;
-    }
-
-    .mock-arc.a { width: 160px; height: 100px; left: 18%; top: 30%; border-color: var(--accent-cyan); transform: rotate(-18deg); }
-    .mock-arc.b { width: 120px; height: 80px; left: 48%; top: 38%; border-color: var(--accent-rose); transform: rotate(12deg); }
-    .mock-node {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-emerald);
-      box-shadow: 0 0 12px rgba(110,231,183,0.6);
-    }
-    .mock-node.n1 { left: 22%; top: 42%; }
-    .mock-node.n2 { left: 48%; top: 28%; }
-    .mock-node.n3 { left: 72%; top: 48%; background: var(--accent-blue); }
-
-    .mock-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 11px;
-      font-family: var(--font-mono);
-    }
-
-    .mock-table th {
-      text-align: left;
-      color: var(--body-dim);
-      font-weight: 400;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 0 8px 10px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .mock-table td {
-      padding: 10px 8px 10px 0;
-      color: var(--cream-dim);
-      border-bottom: 1px solid rgba(176,190,223,0.08);
-    }
-
-    .mock-table .pos { color: var(--accent-emerald); }
-    .mock-table .mid { color: var(--accent-gold); }
-
-    .soh-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .soh-card {
-      border: 1px solid var(--line);
-      padding: 14px;
-      background: rgba(15, 30, 53, 0.5);
-    }
-
-    .soh-label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--body-dim);
-      margin-bottom: 8px;
-    }
-
-    .soh-value {
-      font-family: var(--font-display);
-      font-size: 28px;
-      color: var(--cream);
-      line-height: 1;
-      margin-bottom: 10px;
-    }
-
-    .soh-bar {
-      height: 4px;
-      background: rgba(176,190,223,0.12);
-      overflow: hidden;
-    }
-
-    .soh-bar > span {
       display: block;
-      height: 100%;
-      background: var(--accent-emerald);
+      background: #050b14;
+      line-height: 0;
+      overflow: hidden;
     }
 
-    .soh-bar.amber > span { background: var(--accent-gold); }
-    .soh-bar.rose > span { background: var(--accent-rose); }
-
-    .dispatch-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid rgba(110,231,183,0.35);
-      padding: 12px 14px;
-      background: rgba(110,231,183,0.06);
+    .product-shot img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
-    .dispatch-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--body-light);
-    }
-
-    .dispatch-status {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--accent-emerald);
+    .product-frame-body {
+      padding: 18px 20px 22px;
+      flex: 1;
     }
 
     .product-caption {
-      margin-top: 20px;
       font-size: 13px;
       color: var(--body-dim);
       line-height: 1.55;
-      max-width: 520px;
+    }
+
+    .product-caption strong {
+      color: var(--cream-dim);
+      font-weight: 500;
     }
 
     @media (max-width: 820px) {
       .product-preview { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .product-frame:hover { transform: none; }
     }
 
     /* ── Technology ────────────────────────────────────────────────── */
@@ -1603,90 +1501,51 @@
         </article>
       </div>
 
-      <!-- Product UI previews -->
-      <div class="product-preview scroll-reveal" aria-label="Platform interface previews">
-        <div class="product-frame">
+      <!-- Product UI screenshots -->
+      <div class="product-preview scroll-reveal" aria-label="Platform screenshots">
+        <figure class="product-frame">
           <div class="product-frame-bar" aria-hidden="true">
             <span class="product-dot"></span><span class="product-dot"></span><span class="product-dot"></span>
-            <span class="product-frame-title">Corridor Intelligence · network view</span>
+            <span class="product-frame-title">Corridor Intelligence · CorridorPulse</span>
           </div>
-          <div class="product-frame-body">
-            <div class="mock-map" aria-hidden="true">
-              <div class="mock-arc a"></div>
-              <div class="mock-arc b"></div>
-              <div class="mock-node n1"></div>
-              <div class="mock-node n2"></div>
-              <div class="mock-node n3"></div>
-            </div>
-            <table class="mock-table">
-              <thead>
-                <tr>
-                  <th>Corridor</th>
-                  <th>Feasible</th>
-                  <th>Util. band</th>
-                  <th>Energy</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>FRA → MUC</td>
-                  <td class="pos">Yes</td>
-                  <td class="pos">High</td>
-                  <td>Within reserve</td>
-                </tr>
-                <tr>
-                  <td>FRA → AMS</td>
-                  <td class="pos">Yes</td>
-                  <td class="mid">Medium</td>
-                  <td>Margin-sensitive</td>
-                </tr>
-                <tr>
-                  <td>FRA → BER</td>
-                  <td class="mid">Conditional</td>
-                  <td class="mid">Scenario</td>
-                  <td>Weather-bound</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="product-caption">Illustrative corridor ranking — physics-feasible economics under transparent aircraft and energy assumptions. Live product reviewable under NDA.</p>
-          </div>
-        </div>
+          <a class="product-shot" href="assets/screenshots/corridor-intelligence.jpg" target="_blank" rel="noopener noreferrer">
+            <img
+              src="assets/screenshots/corridor-intelligence.jpg"
+              width="1224"
+              height="640"
+              alt="CorridorPulse corridor intelligence explorer: US network map with scored eSTOL corridors such as Las Vegas–Los Angeles, filters for risk band and minimum score, and ranked corridor list."
+              loading="lazy"
+              decoding="async">
+          </a>
+          <figcaption class="product-frame-body">
+            <p class="product-caption">
+              <strong>Corridor Intelligence</strong> — multi-market network screening with physics-feasible
+              route economics, risk bands, and ranked corridors. Live product; deeper methodology under NDA.
+            </p>
+          </figcaption>
+        </figure>
 
-        <div class="product-frame">
+        <figure class="product-frame">
           <div class="product-frame-bar" aria-hidden="true">
             <span class="product-dot"></span><span class="product-dot"></span><span class="product-dot"></span>
-            <span class="product-frame-title">Operational Intelligence · tail view</span>
+            <span class="product-frame-title">Operational Intelligence · Fleet Overview</span>
           </div>
-          <div class="product-frame-body">
-            <div class="soh-grid" aria-hidden="true">
-              <div class="soh-card">
-                <div class="soh-label">Battery SoH</div>
-                <div class="soh-value">94.2%</div>
-                <div class="soh-bar"><span style="width:94%"></span></div>
-              </div>
-              <div class="soh-card">
-                <div class="soh-label">Motors</div>
-                <div class="soh-value">Nominal</div>
-                <div class="soh-bar"><span style="width:88%"></span></div>
-              </div>
-              <div class="soh-card">
-                <div class="soh-label">Power electronics</div>
-                <div class="soh-value">Watch</div>
-                <div class="soh-bar amber"><span style="width:71%"></span></div>
-              </div>
-              <div class="soh-card">
-                <div class="soh-label">Mission risk band</div>
-                <div class="soh-value">A−</div>
-                <div class="soh-bar"><span style="width:82%"></span></div>
-              </div>
-            </div>
-            <div class="dispatch-row" aria-hidden="true">
-              <span class="dispatch-label">Dispatch support · next mission</span>
-              <span class="dispatch-status">Go · calibrated</span>
-            </div>
-            <p class="product-caption">Illustrative per-aircraft condition panel — calibrated intervals for operators, insurers, and lessors. Architecture and methodology shared under NDA.</p>
-          </div>
-        </div>
+          <a class="product-shot" href="assets/screenshots/operational-intelligence.jpg" target="_blank" rel="noopener noreferrer">
+            <img
+              src="assets/screenshots/operational-intelligence.jpg"
+              width="1920"
+              height="1080"
+              alt="Fleet Overview operational intelligence dashboard: fleet health and battery state-of-health KPIs, live corridor map, critical alerts including dispatch NO-GO, and per-tail health ranking with conditional and no-go status."
+              loading="lazy"
+              decoding="async">
+          </a>
+          <figcaption class="product-frame-body">
+            <p class="product-caption">
+              <strong>Operational Intelligence</strong> — per-aircraft health, battery SoH, dispatch
+              go/no-go, and fleet alerts from first flight. Calibrated evidence for operators, insurers, and lessors.
+            </p>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
