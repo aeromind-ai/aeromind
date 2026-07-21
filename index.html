@@ -834,9 +834,13 @@
 
     .primary-stakeholders {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       margin-bottom: 28px;
+    }
+
+    @media (max-width: 1100px) {
+      .primary-stakeholders { grid-template-columns: 1fr; }
     }
 
     .stakeholder-card {
@@ -930,8 +934,9 @@
 
     .secondary-stakeholders {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 20px;
+      max-width: 720px;
     }
 
     .secondary-label {
@@ -1391,7 +1396,7 @@
       <p class="hero-subhead">
         AeroMind is the physics-grounded intelligence layer for advanced air mobility.
         Plan networks that can pay, and dispatch airframes you can trust — from the first flight,
-        for operators and the capital markets that underwrite them.
+        for operators, lessors, and the insurers who underwrite them.
       </p>
       <div class="hero-actions">
         <a href="book.html" class="btn-primary">Book a demo <span class="arrow" aria-hidden="true">→</span></a>
@@ -1625,9 +1630,9 @@
       <div class="scroll-reveal">
         <p class="section-eyebrow">Solutions</p>
         <h2 class="section-headline" id="solutions-heading">
-          Built first for the people who <span class="italic-accent">fly and underwrite</span> new aircraft.
+          Built first for the people who <span class="italic-accent">fly, finance, and underwrite</span> new aircraft.
         </h2>
-        <p class="icp-note">Primary: operators &amp; insurers · Also: lessors, OEMs, city planners</p>
+        <p class="icp-note">Primary: operators · lessors · insurers · Also: OEMs, city planners</p>
       </div>
 
       <div class="primary-stakeholders scroll-reveal">
@@ -1642,6 +1647,20 @@
           <p class="stakeholder-body">
             Identify the corridors your fleet can profitably serve before committing capital.
             Make go/no-go dispatch decisions backed by per-aircraft prediction — not fleet-average heuristics.
+          </p>
+        </article>
+
+        <article class="stakeholder-card gold primary" id="solutions-lessors">
+          <p class="stakeholder-badge">Primary</p>
+          <h3 class="stakeholder-name">Lessors</h3>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Finance with conviction.</span>
+            <span class="stakeholder-outcome-line">Underwrite the asset.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Underwrite multi-million-dollar aircraft over decade-long leases with independent
+            visibility into operational condition — residual risk you can see, not assume.
           </p>
         </article>
 
@@ -1662,17 +1681,6 @@
 
       <p class="secondary-label scroll-reveal">Also serves</p>
       <div class="secondary-stakeholders scroll-reveal">
-        <article class="stakeholder-card gold" id="solutions-lessors">
-          <h3 class="stakeholder-name">Lessors</h3>
-          <div class="stakeholder-outcome">
-            <span class="stakeholder-outcome-line">Finance with conviction.</span>
-          </div>
-          <div class="stakeholder-rule"></div>
-          <p class="stakeholder-body">
-            Underwrite multi-million-dollar aircraft over decade-long leases with independent visibility into operational condition.
-          </p>
-        </article>
-
         <article class="stakeholder-card emerald" id="solutions-oems">
           <h3 class="stakeholder-name">OEMs</h3>
           <div class="stakeholder-outcome">
@@ -1815,7 +1823,7 @@
       <div class="contact-grid">
         <div class="scroll-reveal">
           <p class="section-body">
-            AeroMind works with operators and insurers first — and with lessors, OEMs,
+            AeroMind works with operators, lessors, and insurers first — and with OEMs
             and city planners across the advanced air mobility ecosystem. A discovery call
             is the fastest way to see whether the platform fits your decisions —
             <strong>no deck walk-through, no pitch. Just a real conversation.</strong>
@@ -1934,8 +1942,8 @@
         <div class="footer-col">
           <p class="footer-col-title">Solutions</p>
           <a href="#solutions-operators">Operators</a>
-          <a href="#solutions-insurers">Insurers</a>
           <a href="#solutions-lessors">Lessors</a>
+          <a href="#solutions-insurers">Insurers</a>
           <a href="#solutions-oems">OEMs &amp; planners</a>
         </div>
         <div class="footer-col">
