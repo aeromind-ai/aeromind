@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AeroMind — Operational Intelligence for Electric Aviation</title>
-  <meta name="description" content="Physics-grounded corridor economics and per-aircraft state-of-health for advanced air mobility — decision-grade intelligence from the first flight.">
+  <meta name="description" content="Physics-grounded corridor economics and per-aircraft state-of-health for advanced air mobility — with certifiable provenance proofs for every neural-network decision.">
   <link rel="canonical" href="https://aeromind-ai.com/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="favicon.svg">
@@ -643,6 +643,59 @@
     @media (max-width: 820px) {
       .pillar-cards { grid-template-columns: 1fr; }
       .pillar-card { padding: 40px 28px; }
+    }
+
+    .provenance-band {
+      margin-top: 48px;
+      padding: 40px 44px;
+      border: 1px solid var(--line);
+      background: rgba(10, 22, 40, 0.65);
+      position: relative;
+    }
+
+    .provenance-band::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-emerald));
+    }
+
+    .provenance-band-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 14px;
+    }
+
+    .provenance-band-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 500;
+      color: var(--cream);
+      letter-spacing: -0.3px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .provenance-band-body {
+      font-size: 16px;
+      color: var(--body-light);
+      line-height: 1.7;
+      max-width: 820px;
+    }
+
+    .provenance-band-body em {
+      font-style: italic;
+      color: var(--cream);
+    }
+
+    @media (max-width: 600px) {
+      .provenance-band { padding: 28px 22px; }
     }
 
     /* ── Product preview ───────────────────────────────────────────── */
@@ -1425,8 +1478,8 @@
           <div class="stat-label">Live corridor engine<br>across candidate networks</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-value">EU-based</div>
-          <div class="stat-label">Frankfurt HQ · built for<br>European operating reality</div>
+          <div class="stat-value">Provenance</div>
+          <div class="stat-label">Certifiable proofs on every<br>neural-network decision</div>
         </div>
       </div>
     </div>
@@ -1468,7 +1521,9 @@
         <p class="section-body">
           A single physics-grounded core serves both the network-level questions —
           where can this aircraft profitably fly — and the per-aircraft questions —
-          what is the condition of this specific tail, right now.
+          what is the condition of this specific tail, right now. Every neural-network
+          output is accompanied by a <strong>certifiable provenance proof</strong> —
+          the audit trail aviation regulation expects for AI-supported decisions.
         </p>
       </div>
 
@@ -1485,7 +1540,7 @@
             <li>Route economics modelled from aircraft physics, not fleet averages</li>
             <li>Network planning across candidate corridors and markets</li>
             <li>Vertiport and infrastructure siting on physics-feasible demand</li>
-            <li>Scenario analysis for aircraft, energy, and utilisation assumptions</li>
+            <li>Provenance proofs for scored corridors and ranking decisions</li>
           </ul>
         </article>
 
@@ -1500,10 +1555,23 @@
           <ul class="pillar-features">
             <li>State-of-health across battery, motors, and power electronics</li>
             <li>Go/no-go dispatch decision support per aircraft, per mission</li>
+            <li>Certifiable provenance on every neural-network decision</li>
             <li>Underwriting-grade evidence with calibrated confidence intervals</li>
-            <li>Independent asset condition visibility over the lease lifetime</li>
           </ul>
         </article>
+      </div>
+
+      <div class="provenance-band scroll-reveal">
+        <p class="provenance-band-label">Regulatory readiness</p>
+        <h3 class="provenance-band-title">Certifiable provenance proofs — not black-box AI.</h3>
+        <p class="provenance-band-body">
+          Aviation authorities do not accept unexplained model outputs. AeroMind generates
+          a structured provenance record for each decision produced by the neural network —
+          inputs, model version, physics constraints, uncertainty, and the reasoning path —
+          so operators, lessors, insurers, and regulators can reconstruct <em>why</em> a
+          corridor score or dispatch recommendation was made. Built for the assurance bar
+          of EASA, FAA, and the broader AI-in-aviation conversation — not as an afterthought.
+        </p>
       </div>
 
       <!-- Product UI screenshots -->
@@ -1547,7 +1615,7 @@
           <figcaption class="product-frame-body">
             <p class="product-caption">
               <strong>Operational Intelligence</strong> — per-aircraft health, battery SoH, dispatch
-              go/no-go, and fleet alerts from first flight. Calibrated evidence for operators, insurers, and lessors.
+              go/no-go, and fleet alerts from first flight — with certifiable provenance on model decisions.
             </p>
           </figcaption>
         </figure>
@@ -1561,7 +1629,7 @@
       <div class="scroll-reveal">
         <p class="section-eyebrow" style="color: var(--accent-blue);">Technology</p>
         <h2 class="section-headline" id="technology-heading">
-          Physics first. <span class="italic-accent" style="color: var(--accent-blue);">Data as it arrives.</span>
+          Physics first. <span class="italic-accent" style="color: var(--accent-blue);">Every decision, provable.</span>
         </h2>
       </div>
 
@@ -1571,7 +1639,9 @@
             Conventional aviation intelligence calibrates on decades of accumulated
             failure data. AeroMind inverts the approach: <strong>start from the physics
             of the aircraft</strong> — the electrochemistry, the thermal behaviour, the
-            aerodynamics — and treat operating data as calibration, not prerequisite.
+            aerodynamics — treat operating data as calibration, not prerequisite, and
+            attach a <strong>certifiable provenance proof</strong> to every neural-network
+            decision so the output remains auditable under aviation regulation.
           </p>
 
           <div class="tech-steps">
@@ -1609,10 +1679,22 @@
                 </p>
               </div>
             </div>
+            <div class="tech-step">
+              <div class="tech-step-num">04</div>
+              <div>
+                <h3 class="tech-step-title">Prove</h3>
+                <p class="tech-step-body">
+                  For each neural-network decision, the platform emits a certifiable
+                  provenance proof — model identity, inputs, constraints, intermediate
+                  evidence, and confidence — suitable for operational audit, underwriting
+                  files, and regulatory review. No opaque recommendation without a trail.
+                </p>
+              </div>
+            </div>
           </div>
 
           <p class="section-body" style="color: var(--body-dim); font-size: 15px; margin-top: 40px; margin-bottom: 0;">
-            Detailed technical architecture and methodology are shared under NDA.
+            Detailed technical architecture, provenance schema, and methodology are shared under NDA.
           </p>
         </div>
 
@@ -1646,7 +1728,8 @@
           <div class="stakeholder-rule"></div>
           <p class="stakeholder-body">
             Identify the corridors your fleet can profitably serve before committing capital.
-            Make go/no-go dispatch decisions backed by per-aircraft prediction — not fleet-average heuristics.
+            Make go/no-go dispatch decisions backed by per-aircraft prediction — with
+            certifiable provenance proofs for every neural-network recommendation auditors can follow.
           </p>
         </article>
 
@@ -1660,7 +1743,8 @@
           <div class="stakeholder-rule"></div>
           <p class="stakeholder-body">
             Underwrite multi-million-dollar aircraft over decade-long leases with independent
-            visibility into operational condition — residual risk you can see, not assume.
+            visibility into operational condition — and a provenance trail on each condition
+            call, not a black-box residual risk story.
           </p>
         </article>
 
@@ -1674,7 +1758,8 @@
           <div class="stakeholder-rule"></div>
           <p class="stakeholder-body">
             Price hull and liability on aircraft with no actuarial precedent, with calibrated
-            confidence intervals from flight one — independent of OEM marketing claims.
+            confidence intervals and certifiable provenance proofs from flight one —
+            evidence files that stand up to regulatory and claims scrutiny.
           </p>
         </article>
       </div>
@@ -1735,10 +1820,11 @@
         </article>
         <article class="proof-card">
           <p class="proof-num">03</p>
-          <h3 class="proof-title">Proprietary intelligence core</h3>
+          <h3 class="proof-title">Certifiable provenance on every decision</h3>
           <p class="proof-body">
-            Defensible IP covering the operational core, the data-exchange layer,
-            and the corridor-intelligence engine — held as proprietary technology.
+            Structured provenance proofs for neural-network outputs — model version,
+            inputs, physics constraints, uncertainty, and decision path — designed for
+            operational audit and aviation regulatory scrutiny.
           </p>
         </article>
         <article class="proof-card">
@@ -1751,11 +1837,10 @@
         </article>
         <article class="proof-card">
           <p class="proof-num">05</p>
-          <h3 class="proof-title">Deep aviation systems expertise</h3>
+          <h3 class="proof-title">Built for the regulatory bar</h3>
           <p class="proof-body">
-            Built by a team with decades of experience across commercial aviation AI,
-            flight operations systems, and enterprise data platforms that airlines and
-            OEMs already run on.
+            Architecture shaped around certification, data governance, and AI assurance
+            realities in Europe and beyond — not generic analytics retrofitted for aviation.
           </p>
         </article>
       </div>
@@ -1778,8 +1863,9 @@
           </p>
           <p class="section-body">
             Headquartered in Frankfurt, Germany, with active European regulatory engagement
-            and a platform designed for the certification and data-governance realities of
-            operating aircraft in Europe and beyond.
+            and a platform designed for certification, data governance, and
+            <strong>AI-decision provenance</strong> — the assurance bar for operating
+            aircraft in Europe and beyond.
           </p>
         </div>
         <div class="scroll-reveal">
