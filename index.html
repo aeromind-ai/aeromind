@@ -310,9 +310,11 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      min-height: 100%;
       z-index: 1;
       opacity: 0;
       transition: opacity 1.6s ease;
+      pointer-events: none;
     }
 
     #hero-canvas.ready { opacity: 1; }
@@ -2130,11 +2132,9 @@
   </script>
 
   <!-- ── 3D scenes: hero eVTOL + corridor globe (Three.js) ───────── -->
-  <script type="importmap">
-    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
-  </script>
+  <!-- Full CDN URL (no import map) — more reliable on Azure Static Web Apps -->
   <script type="module">
-    import * as THREE from 'three';
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -2151,10 +2151,18 @@
         canvas,
         antialias: true,
         alpha: true,
-        powerPreference: 'low-power'
+        powerPreference: 'high-performance'
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setClearColor(0x000000, 0);
       return renderer;
+    }
+
+    function canvasSize(canvas) {
+      const parent = canvas.parentElement;
+      const w = Math.max(canvas.clientWidth || 0, parent ? parent.clientWidth : 0, window.innerWidth || 0);
+      const h = Math.max(canvas.clientHeight || 0, parent ? parent.clientHeight : 0, window.innerHeight || 0);
+      return { w: Math.max(1, w), h: Math.max(1, h) };
     }
 
     function edgeLines(geometry, color, opacity) {
@@ -2304,7 +2312,7 @@
       }, { passive: true });
 
       function resize() {
-        const w = canvas.clientWidth, h = canvas.clientHeight;
+        const { w, h } = canvasSize(canvas);
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
@@ -2313,7 +2321,7 @@
       window.addEventListener('resize', resize);
 
       function render(t) {
-        const time = t * 0.001;
+        const time = (typeof t === 'number' ? t : 0) * 0.001;
         aircraft.position.y = -1.3 + Math.sin(time * 0.8) * 0.22;
         aircraft.rotation.y = -0.5 + Math.sin(time * 0.15) * 0.18;
         aircraft.rotation.z = Math.sin(time * 0.5) * 0.03;
@@ -2424,7 +2432,7 @@
       });
 
       function resize() {
-        const w = canvas.clientWidth, h = canvas.clientHeight;
+        const { w, h } = canvasSize(canvas);
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
@@ -2433,7 +2441,7 @@
       window.addEventListener('resize', resize);
 
       function render(t) {
-        const time = t * 0.001;
+        const time = (typeof t === 'number' ? t : 0) * 0.001;
         globe.rotation.y = time * 0.12;
         arcs.forEach((line, i) => {
           line.material.dashOffset = -time * (0.25 + i * 0.02);
@@ -2445,29 +2453,48 @@
       return { canvas, render, renderOnce: () => render(0) };
     }
 
-    // Lazy-init 3D when canvases near viewport
+    // Hero boots immediately (above the fold). Globe lazy-loads when near viewport.
     let heroScene = null, globeScene = null;
     const scenes = [];
+    const visible = new Set();
+    let loopStarted = false;
+    let sceneObserver = null;
+
+    function isOnScreen(el) {
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < (window.innerHeight || 0) + 200;
+    }
 
     function startLoop() {
-      if (!scenes.length) return;
+      if (loopStarted || !scenes.length) return;
+      loopStarted = true;
+
       if (prefersReducedMotion) {
         scenes.forEach(s => s.renderOnce());
         return;
       }
-      const visible = new Set();
-      const sceneObserver = new IntersectionObserver((entries) => {
+
+      sceneObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const s = scenes.find(sc => sc.canvas === entry.target);
           if (!s) return;
           if (entry.isIntersecting) visible.add(s);
           else visible.delete(s);
         });
-      }, { threshold: 0.05 });
-      scenes.forEach(s => sceneObserver.observe(s.canvas));
+      }, { threshold: 0.01, rootMargin: '80px' });
+
+      scenes.forEach(s => {
+        sceneObserver.observe(s.canvas);
+        if (isOnScreen(s.canvas)) visible.add(s);
+        // Paint immediately so the aircraft is never stuck at opacity 0 with a blank frame
+        s.renderOnce();
+      });
 
       function loop(t) {
-        if (!document.hidden) visible.forEach(s => s.render(t));
+        if (!document.hidden) {
+          visible.forEach(s => s.render(t));
+        }
         requestAnimationFrame(loop);
       }
       requestAnimationFrame(loop);
@@ -2477,43 +2504,48 @@
       try {
         if (which === 'hero' && !heroScene) {
           heroScene = initHero();
-          if (heroScene) scenes.push(heroScene);
+          if (heroScene) {
+            scenes.push(heroScene);
+            if (sceneObserver) {
+              sceneObserver.observe(heroScene.canvas);
+              if (isOnScreen(heroScene.canvas)) visible.add(heroScene);
+            }
+            heroScene.renderOnce();
+          }
         }
         if (which === 'globe' && !globeScene) {
           globeScene = initGlobe();
-          if (globeScene) scenes.push(globeScene);
+          if (globeScene) {
+            scenes.push(globeScene);
+            if (sceneObserver) {
+              sceneObserver.observe(globeScene.canvas);
+              if (isOnScreen(globeScene.canvas)) visible.add(globeScene);
+            }
+            globeScene.renderOnce();
+          }
         }
       } catch (err) {
         console.warn('3D scenes disabled:', err);
       }
     }
 
-    const heroCanvas = document.getElementById('hero-canvas');
     const globeCanvas = document.getElementById('globe-canvas');
-    let loopStarted = false;
 
-    function ensureLoop() {
-      if (!loopStarted && scenes.length) {
-        loopStarted = true;
-        startLoop();
-      }
-    }
+    // Always boot the hero aircraft as soon as the module loads
+    tryInit('hero');
+    startLoop();
 
-    if ('IntersectionObserver' in window) {
-      const boot = new IntersectionObserver((entries) => {
+    if (globeCanvas && 'IntersectionObserver' in window) {
+      const bootGlobe = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
-          if (entry.target.id === 'hero-canvas') tryInit('hero');
-          if (entry.target.id === 'globe-canvas') tryInit('globe');
-          ensureLoop();
+          tryInit('globe');
+          bootGlobe.disconnect();
         });
-      }, { rootMargin: '120px', threshold: 0.01 });
-      if (heroCanvas) boot.observe(heroCanvas);
-      if (globeCanvas) boot.observe(globeCanvas);
+      }, { rootMargin: '200px', threshold: 0.01 });
+      bootGlobe.observe(globeCanvas);
     } else {
-      tryInit('hero');
       tryInit('globe');
-      ensureLoop();
     }
   </script>
 
