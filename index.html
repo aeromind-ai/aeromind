@@ -989,9 +989,12 @@
 
     .secondary-stakeholders {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      max-width: 720px;
+    }
+
+    @media (max-width: 1100px) {
+      .secondary-stakeholders { grid-template-columns: 1fr; }
     }
 
     .secondary-label {
@@ -1716,7 +1719,7 @@
         <h2 class="section-headline" id="solutions-heading">
           Built first for the people who <span class="italic-accent">fly, finance, and underwrite</span> new aircraft.
         </h2>
-        <p class="icp-note">Primary: operators · lessors · insurers · Also: OEMs, city planners</p>
+        <p class="icp-note">Primary: operators · lessors · insurers · Also: OEMs, city planners, consultants</p>
       </div>
 
       <div class="primary-stakeholders scroll-reveal">
@@ -1787,6 +1790,22 @@
           <div class="stakeholder-rule"></div>
           <p class="stakeholder-body">
             Evaluate which corridors justify vertiport investment based on physics-feasible demand for the AAM era.
+          </p>
+        </article>
+
+        <article class="stakeholder-card blue" id="solutions-consultants">
+          <h3 class="stakeholder-name">Consultants</h3>
+          <div class="stakeholder-outcome">
+            <span class="stakeholder-outcome-line">Build the investment case.</span>
+            <span class="stakeholder-outcome-line">Ground every corridor claim.</span>
+          </div>
+          <div class="stakeholder-rule"></div>
+          <p class="stakeholder-body">
+            Strategy and advisory teams building business cases for advanced air mobility
+            investment use Corridor Intelligence to stress-test which routes can actually
+            pay — under transparent aircraft, energy, and utilisation assumptions — so
+            client recommendations rest on physics-feasible economics, not fleet averages
+            that do not yet exist.
           </p>
         </article>
       </div>
@@ -1911,9 +1930,10 @@
       <div class="contact-grid">
         <div class="scroll-reveal">
           <p class="section-body">
-            AeroMind works with operators, lessors, and insurers first — and with OEMs
-            and city planners across the advanced air mobility ecosystem. A discovery call
-            is the fastest way to see whether the platform fits your decisions —
+            AeroMind works with operators, lessors, and insurers first — and with OEMs,
+            city planners, and consultants building AAM investment cases across the
+            advanced air mobility ecosystem. A discovery call is the fastest way to see
+            whether the platform fits your decisions —
             <strong>no deck walk-through, no pitch. Just a real conversation.</strong>
           </p>
           <div class="contact-info">
@@ -1982,6 +2002,7 @@
                     <option>Lessor / financier</option>
                     <option>OEM</option>
                     <option>City / infrastructure</option>
+                    <option>Consultant / advisory</option>
                     <option>Partner / other</option>
                   </select>
                 </div>
@@ -2032,7 +2053,9 @@
           <a href="#solutions-operators">Operators</a>
           <a href="#solutions-lessors">Lessors</a>
           <a href="#solutions-insurers">Insurers</a>
-          <a href="#solutions-oems">OEMs &amp; planners</a>
+          <a href="#solutions-oems">OEMs</a>
+          <a href="#solutions-planners">City planners</a>
+          <a href="#solutions-consultants">Consultants</a>
         </div>
         <div class="footer-col">
           <p class="footer-col-title">Company</p>
